@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "vmga3t8FiTB7MTSqGxE0ptQYK4KrNb62RqzqAXSu9Xo=",
+  "Source": "BusTicketAPI",
+  "BasePath": "_content/BusTicketAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
