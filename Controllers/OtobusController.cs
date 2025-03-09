@@ -18,12 +18,23 @@ namespace BusTicketAPI.Controllers
             _context = context;
         }
 
-        // 1️⃣ Tüm otobüsleri getir
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Otobus>>> GetOtobusler()
+        public async Task<ActionResult<IEnumerable<object>>> GetOtobusler()
         {
-            return await _context.Otobusler.ToListAsync();
+            var otobusler = await _context.Otobusler
+                .Select(o => new
+                {
+                    o.Id,
+                    o.Plaka,
+                    o.KoltukSayisi,
+                    o.OtobusModel,
+                    o.FirmaId
+                })
+                .ToListAsync();
+
+            return Ok(otobusler);
         }
+
 
         // 2️⃣ Yeni otobüs ekle
         [HttpPost]

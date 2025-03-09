@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\acart\\OneDrive\\Masaüstü\\acar-ticket\\BusTicketAPI.csproj": {}
+    "C:\\Users\\acart\\OneDrive\\Masaüstü\\BiletSatisBackend\\BusTicketAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\acart\\OneDrive\\Masaüstü\\acar-ticket\\BusTicketAPI.csproj": {
+    "C:\\Users\\acart\\OneDrive\\Masaüstü\\BiletSatisBackend\\BusTicketAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\acart\\OneDrive\\Masaüstü\\acar-ticket\\BusTicketAPI.csproj",
+        "projectUniqueName": "C:\\Users\\acart\\OneDrive\\Masaüstü\\BiletSatisBackend\\BusTicketAPI.csproj",
         "projectName": "BusTicketAPI",
-        "projectPath": "C:\\Users\\acart\\OneDrive\\Masaüstü\\acar-ticket\\BusTicketAPI.csproj",
+        "projectPath": "C:\\Users\\acart\\OneDrive\\Masaüstü\\BiletSatisBackend\\BusTicketAPI.csproj",
         "packagesPath": "C:\\Users\\acart\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\acart\\OneDrive\\Masaüstü\\acar-ticket\\obj\\",
+        "outputPath": "C:\\Users\\acart\\OneDrive\\Masaüstü\\BiletSatisBackend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\acart\\AppData\\Roaming\\NuGet\\NuGet.Config"

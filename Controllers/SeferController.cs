@@ -1,12 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BusTicketAPI.Data;
 using YourNamespace.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using BusTicketAPI.Data;
 
-namespace BusTicketAPI.Controllers
+namespace YourNamespace.Controllers
 {
     [Route("api/seferler")]
     [ApiController]
@@ -19,28 +16,53 @@ namespace BusTicketAPI.Controllers
             _context = context;
         }
 
-        // 1️⃣ Tüm Seferleri Getir (Filtreleme Destekli)
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> GetSeferler()
+        public async Task<ActionResult<IEnumerable<Sefer>>> GetSeferler(
+            [FromQuery] int? kalkisSehirId,
+            [FromQuery] int? varisSehirId,
+            [FromQuery] DateTime? tarih)
         {
-            var seferler = await _context.Seferler
-                .Include(s => s.KalkisSehir)
-                .Include(s => s.VarisSehir)
-                .Select(s => new
-                {
-                    s.Id,
-                    KalkisSehir = s.KalkisSehir.SehirAdi,
-                    VarisSehir = s.VarisSehir.SehirAdi,
-                    Tarih = s.Tarih.ToString("yyyy-MM-dd"),
-                    Saat = s.Saat.ToString(@"hh\:mm"), // ⏰ Saat formatı düzgün döndüğünden emin ol
-                    s.Fiyat,
-                    FirmaAdi = s.Firma.FirmaAdi,
-                    OtobusPlaka = s.Otobus.Plaka
-                })
+            var query = _context.Seferler.AsQueryable();
+
+            // Filtreleme işlemleri
+            if (kalkisSehirId.HasValue)
+                query = query.Where(s => s.KalkisSehirId == kalkisSehirId.Value);
+
+            if (varisSehirId.HasValue)
+                query = query.Where(s => s.VarisSehirId == varisSehirId.Value);
+
+            if (tarih.HasValue)
+            {
+                DateTime startOfDay = tarih.Value.Date;
+                DateTime endOfDay = tarih.Value.Date.AddDays(1);
+
+                query = query.Where(s => s.Tarih >= startOfDay && s.Tarih < endOfDay);
+            }
+
+            // İlişkili tablolardan verileri dahil et
+            var seferler = await query
+                .Include(s => s.KalkisSehir)  // Kalkış şehri
+                .Include(s => s.VarisSehir)   // Varış şehri
+                .Include(s => s.Firma)        // Firma
+                .Include(s => s.Otobus)       // Otobüs
                 .ToListAsync();
 
-            return Ok(seferler);
+            var seferlerDto = seferler.Select(s => new
+            {
+                s.Id,
+                KalkisSehirAdi = s.KalkisSehir?.SehirAdi,  // Kalkış şehri adı
+                VarisSehirAdi = s.VarisSehir?.SehirAdi,    // Varış şehri adı
+                s.Tarih,
+                // Saatin formatlanması
+                Saat = s.Saat.ToString(@"hh\:mm"),          // Saat formatı
+                s.Fiyat,
+                FirmaAdi = s.Firma?.FirmaAdi,             // Firma adı
+                OtobusPlaka = s.Otobus?.Plaka             // Otobüs plakası
+            }).ToList();
+
+            return Ok(seferlerDto);
         }
+
 
 
 
@@ -59,16 +81,13 @@ namespace BusTicketAPI.Controllers
                 return BadRequest("Tarih alanı boş olamaz.");
 
             if (sefer.Saat == default)
-                return BadRequest("Saat alanı boş olamaz."); // ⏰ Saatin boş olup olmadığını kontrol et
+                return BadRequest("Saat alanı boş olamaz.");
 
             _context.Seferler.Add(sefer);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetSeferler), new { id = sefer.Id }, sefer);
         }
-
-
-
 
         // 3️⃣ Belirli Bir Seferi Getir
         [HttpGet("{id}")]
@@ -77,6 +96,8 @@ namespace BusTicketAPI.Controllers
             var sefer = await _context.Seferler
                 .Include(s => s.KalkisSehir)
                 .Include(s => s.VarisSehir)
+                .Include(s => s.Firma)
+                .Include(s => s.Otobus)
                 .FirstOrDefaultAsync(s => s.Id == id);
 
             if (sefer == null)
@@ -85,13 +106,13 @@ namespace BusTicketAPI.Controllers
             return Ok(new
             {
                 sefer.Id,
-                Tarih = sefer.Tarih.ToString("yyyy-MM-dd"),
-                Saat = sefer.Tarih.ToString("HH:mm"),
+                KalkisSehir = sefer.KalkisSehir.SehirAdi,   // Kalkış şehri
+                VarisSehir = sefer.VarisSehir.SehirAdi,     // Varış şehri
+                Tarih = sefer.Tarih.ToString("yyyy-MM-dd"), // Tarih formatı
+                Saat = sefer.Saat.ToString(@"hh\:mm"),      // Saat formatı
                 sefer.Fiyat,
-                KalkisSehir = sefer.KalkisSehir!.SehirAdi,
-                VarisSehir = sefer.VarisSehir!.SehirAdi,
-                FirmaAdi = sefer.Firma!.FirmaAdi,
-                OtobusPlaka = sefer.Otobus!.Plaka
+                FirmaAdi = sefer.Firma.FirmaAdi,            // Firma adı
+                OtobusPlaka = sefer.Otobus.Plaka            // Otobüs plakası
             });
         }
 

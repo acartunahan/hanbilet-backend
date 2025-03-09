@@ -44,8 +44,14 @@ namespace BusTicketAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Cinsiyet = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConfirmPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -151,7 +157,8 @@ namespace BusTicketAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SeferId = table.Column<int>(type: "int", nullable: false),
                     KoltukNumarasi = table.Column<int>(type: "int", nullable: false),
-                    Dolu = table.Column<bool>(type: "bit", nullable: false)
+                    Dolu = table.Column<bool>(type: "bit", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -162,6 +169,11 @@ namespace BusTicketAPI.Migrations
                         principalTable: "Seferler",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Koltuklar_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -200,6 +212,11 @@ namespace BusTicketAPI.Migrations
                 name: "IX_Koltuklar_SeferId",
                 table: "Koltuklar",
                 column: "SeferId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Koltuklar_UserId",
+                table: "Koltuklar",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Otobusler_FirmaId",

@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using YourNamespace.Models;
 
-namespace YourNamespace.Models
+namespace BusTicketAPI.Models
 {
     public class Koltuk
     {
@@ -15,9 +16,14 @@ namespace YourNamespace.Models
         public Sefer? Sefer { get; set; }
 
         [Required]
-        public int KoltukNumarasi { get; set; } // 1-40 arasındaki numara
+        public int KoltukNumarasi { get; set; } // 1-40 seat number
 
         [Required]
-        public bool Dolu { get; set; } = false; // Varsayılan olarak boş
+        public bool Dolu { get; set; } = false; // Initially empty
+
+        public int? UserId { get; set; } // ✅ Nullable UserId to allow NULL values
+
+        [ForeignKey("UserId")]
+        public User? User { get; set; } // ✅ Foreign key relationship
     }
 }

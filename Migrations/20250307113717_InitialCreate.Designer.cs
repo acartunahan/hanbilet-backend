@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusTicketAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250304105813_InitialCreate")]
+    [Migration("20250307113717_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,6 +25,35 @@ namespace BusTicketAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("BusTicketAPI.Models.Koltuk", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Dolu")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("KoltukNumarasi")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SeferId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SeferId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Koltuklar");
+                });
+
             modelBuilder.Entity("BusTicketAPI.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -32,6 +61,17 @@ namespace BusTicketAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Cinsiyet")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConfirmPassword")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -42,6 +82,18 @@ namespace BusTicketAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -97,30 +149,6 @@ namespace BusTicketAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Firmalar");
-                });
-
-            modelBuilder.Entity("YourNamespace.Models.Koltuk", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Dolu")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("KoltukNumarasi")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SeferId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SeferId");
-
-                    b.ToTable("Koltuklar");
                 });
 
             modelBuilder.Entity("YourNamespace.Models.Otobus", b =>
@@ -239,6 +267,23 @@ namespace BusTicketAPI.Migrations
                     b.ToTable("Sehirler");
                 });
 
+            modelBuilder.Entity("BusTicketAPI.Models.Koltuk", b =>
+                {
+                    b.HasOne("YourNamespace.Models.Sefer", "Sefer")
+                        .WithMany()
+                        .HasForeignKey("SeferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusTicketAPI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Sefer");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("YourNamespace.Models.Bilet", b =>
                 {
                     b.HasOne("YourNamespace.Models.Sefer", "Sefer")
@@ -256,17 +301,6 @@ namespace BusTicketAPI.Migrations
                     b.Navigation("Sefer");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("YourNamespace.Models.Koltuk", b =>
-                {
-                    b.HasOne("YourNamespace.Models.Sefer", "Sefer")
-                        .WithMany()
-                        .HasForeignKey("SeferId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Sefer");
                 });
 
             modelBuilder.Entity("YourNamespace.Models.Otobus", b =>
