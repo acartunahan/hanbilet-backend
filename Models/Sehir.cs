@@ -8,6 +8,6 @@ namespace YourNamespace.Models
         public int Id { get; set; }
 
         [Required]
-        public required string SehirAdi { get; set; }  // Örn: Ankara, İstanbul, İzmir
+        public required string SehirAdi { get; set; }
     }
 }

@@ -24,35 +24,33 @@ namespace BusTicketAPI.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // 🔥 Sefer -> Kalkış Şehri (Şehir silindiğinde seferler silinmesin)
+
             modelBuilder.Entity<Sefer>()
                 .HasOne(s => s.KalkisSehir)
                 .WithMany()
                 .HasForeignKey(s => s.KalkisSehirId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // 🔥 Sefer -> Varış Şehri (Şehir silindiğinde seferler silinmesin)
             modelBuilder.Entity<Sefer>()
                 .HasOne(s => s.VarisSehir)
                 .WithMany()
                 .HasForeignKey(s => s.VarisSehirId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // 🔥 Sefer -> Firma (Firma silindiğinde seferler silinmesin)
             modelBuilder.Entity<Sefer>()
                 .HasOne(s => s.Firma)
                 .WithMany(f => f.Seferler)
                 .HasForeignKey(s => s.FirmaId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // 🔥 Otobüs -> Firma (Firma silindiğinde otobüsler silinmesin)
+
             modelBuilder.Entity<Otobus>()
                 .HasOne(o => o.Firma)
                 .WithMany(f => f.Otobusler)
                 .HasForeignKey(o => o.FirmaId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // 🔥 Sefer -> Otobüs (Otobüs silindiğinde seferler silinmesin)
+
             modelBuilder.Entity<Sefer>()
                 .HasOne(s => s.Otobus)
                 .WithMany(o => o.Seferler)

@@ -11,22 +11,21 @@ namespace YourNamespace.Models
         public int Id { get; set; }
 
         [Required]
-        public int KalkisSehirId { get; set; } // 📌 Kalkış noktası ID
+        public int KalkisSehirId { get; set; }
 
         [ForeignKey("KalkisSehirId")]
         public Sehir? KalkisSehir { get; set; }
 
         [Required]
-        public int VarisSehirId { get; set; } // 📌 Varış noktası ID
-
+        public int VarisSehirId { get; set; }
         [ForeignKey("VarisSehirId")]
         public Sehir? VarisSehir { get; set; }
 
         [Required]
-        public DateTime Tarih { get; set; } // 📌 Tarih alanı artık DateTime oldu!
+        public DateTime Tarih { get; set; }
 
         [Required]
-        public TimeSpan Saat { get; set; } // ⏰ Saat alanı eklendi!
+        public TimeSpan Saat { get; set; }
 
         [Required]
         public decimal Fiyat { get; set; }

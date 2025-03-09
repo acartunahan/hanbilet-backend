@@ -19,14 +19,12 @@ namespace BusTicketAPI.Controllers
             _context = context;
         }
 
-        // 🔥 1️⃣ Tüm firmaları getir
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Firma>>> GetFirmalar()
         {
             return await _context.Firmalar.ToListAsync();
         }
 
-        // 🔥 2️⃣ Tek bir firma ekle
         [HttpPost]
         public async Task<ActionResult<Firma>> PostFirma(Firma firma)
         {
@@ -35,7 +33,6 @@ namespace BusTicketAPI.Controllers
             return CreatedAtAction(nameof(GetFirmalar), new { id = firma.Id }, firma);
         }
 
-        // 🔥 3️⃣ Toplu firma ekleme
         [HttpPost("toplu-ekle")]
         public async Task<IActionResult> PostFirmalar(List<Firma> firmalar)
         {

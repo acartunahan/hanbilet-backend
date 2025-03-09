@@ -19,14 +19,14 @@ namespace BusTicketAPI.Controllers
             _context = context;
         }
 
-        // 1️⃣ Tüm şehirleri getir
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sehir>>> GetSehirler()
         {
             return await _context.Sehirler.ToListAsync();
         }
 
-        // 2️⃣ Yeni şehir ekle
+
         [HttpPost("toplu-ekle")]
         public async Task<IActionResult> PostSehirler(List<Sehir> sehirler)
         {
@@ -40,7 +40,7 @@ namespace BusTicketAPI.Controllers
         }
 
 
-        // 3️⃣ Belirli bir şehri getir
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Sehir>> GetSehir(int id)
         {
@@ -50,7 +50,7 @@ namespace BusTicketAPI.Controllers
             return sehir;
         }
 
-        // 4️⃣ Şehri güncelle
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSehir(int id, Sehir sehir)
         {
@@ -62,7 +62,7 @@ namespace BusTicketAPI.Controllers
             return NoContent();
         }
 
-        // 5️⃣ Şehri sil
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSehir(int id)
         {

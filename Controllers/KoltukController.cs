@@ -20,16 +20,14 @@ namespace BusTicketAPI.Controllers
             _context = context;
         }
 
-        // 📌 1️⃣ Belirli bir sefere ait koltukları getir
         [HttpGet("{seferId}")]
         public async Task<ActionResult<IEnumerable<Koltuk>>> GetKoltuklar(int seferId)
         {
             var koltuklar = await _context.Koltuklar
                 .Where(k => k.SeferId == seferId)
-                .Include(k => k.User) // Kullanıcı bilgisi dahil edildi
+                .Include(k => k.User)
                 .ToListAsync();
 
-            // Eğer bu sefere ait koltuklar veritabanında yoksa, 40 koltuk oluştur.
             if (!koltuklar.Any())
             {
                 for (int i = 1; i <= 40; i++)
@@ -38,20 +36,18 @@ namespace BusTicketAPI.Controllers
                     {
                         SeferId = seferId,
                         KoltukNumarasi = i,
-                        Dolu = false, // Başlangıçta boş
-                        UserId = null // Boş koltuklarda UserId null olmalı
+                        Dolu = false,
+                        UserId = null
                     });
                 }
                 await _context.SaveChangesAsync();
 
-                // Yeni eklenen koltukları çek
                 koltuklar = await _context.Koltuklar
                     .Where(k => k.SeferId == seferId)
                     .Include(k => k.User)
                     .ToListAsync();
             }
 
-            // Kullanıcı bilgisi ile birlikte dönüyoruz.
             var response = koltuklar.Select(k => new
             {
                 k.Id,
@@ -59,17 +55,16 @@ namespace BusTicketAPI.Controllers
                 k.KoltukNumarasi,
                 k.Dolu,
                 k.UserId,
-                Cinsiyet = k.User != null ? k.User.Cinsiyet : null // Kullanıcı varsa cinsiyetini getir
+                Cinsiyet = k.User != null ? k.User.Cinsiyet : null
             });
 
             return Ok(response);
         }
 
-        // 📌 2️⃣ Koltuk satın alma
         [HttpPost("satin-al")]
         public async Task<IActionResult> SatinAl([FromBody] Koltuk koltuk)
         {
-            // Koltuk mevcut mu?
+
             var mevcutKoltuk = await _context.Koltuklar
                 .FirstOrDefaultAsync(k => k.SeferId == koltuk.SeferId && k.KoltukNumarasi == koltuk.KoltukNumarasi);
 
@@ -79,28 +74,27 @@ namespace BusTicketAPI.Controllers
             if (mevcutKoltuk.Dolu)
                 return BadRequest(new { message = "Bu koltuk zaten satın alınmış!" });
 
-            // Kullanıcıyı getir
+
             var user = await _context.Users.FindAsync(koltuk.UserId);
             if (user == null)
                 return BadRequest(new { message = "Kullanıcı bulunamadı!" });
 
-            // 📌 Koltuğu "Dolu" yap ve Kullanıcı ID'sini ata
             mevcutKoltuk.Dolu = true;
-            mevcutKoltuk.UserId = user.Id; // Kullanıcı ID'si eklendi
+            mevcutKoltuk.UserId = user.Id;
 
-            // 📌 Sefer bilgisini al
+
             var sefer = await _context.Seferler.FirstOrDefaultAsync(s => s.Id == koltuk.SeferId);
             if (sefer == null)
                 return BadRequest(new { message = "Geçersiz sefer!" });
 
-            // 📌 Kullanıcının bilet kaydını oluştur
+
             var yeniBilet = new Bilet
             {
                 SeferId = koltuk.SeferId,
                 UserId = user.Id,
                 KoltukNumarasi = koltuk.KoltukNumarasi,
                 SatinAlmaTarihi = DateTime.UtcNow,
-                Fiyat = sefer.Fiyat // **Bilet fiyatı sefer modelinden alınıyor**
+                Fiyat = sefer.Fiyat
             };
 
             _context.Biletler.Add(yeniBilet);
@@ -117,7 +111,7 @@ namespace BusTicketAPI.Controllers
                     mevcutKoltuk.KoltukNumarasi,
                     mevcutKoltuk.Dolu,
                     mevcutKoltuk.UserId,
-                    Cinsiyet = user.Cinsiyet // Kullanıcının cinsiyet bilgisi
+                    Cinsiyet = user.Cinsiyet
                 }
             });
         }

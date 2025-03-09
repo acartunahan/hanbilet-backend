@@ -16,14 +16,14 @@ namespace BusTicketAPI.Models
         public Sefer? Sefer { get; set; }
 
         [Required]
-        public int KoltukNumarasi { get; set; } // 1-40 seat number
+        public int KoltukNumarasi { get; set; } 
 
         [Required]
-        public bool Dolu { get; set; } = false; // Initially empty
+        public bool Dolu { get; set; } = false; 
 
-        public int? UserId { get; set; } // ✅ Nullable UserId to allow NULL values
+        public int? UserId { get; set; } 
 
         [ForeignKey("UserId")]
-        public User? User { get; set; } // ✅ Foreign key relationship
+        public User? User { get; set; } 
     }
 }

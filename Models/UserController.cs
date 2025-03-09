@@ -19,7 +19,7 @@ public class UserController : ControllerBase
         _context = context;
     }
 
-    // 📌 Kullanıcı Bilgilerini Getir
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUser(int id)
     {
@@ -32,12 +32,11 @@ public class UserController : ControllerBase
             surname = user.Surname,
             email = user.Email,
             phone = user.Phone,
-            birthDate = user.BirthDate.ToString("yyyy-MM-dd"), // ✅ `Age` yerine doğum tarihi döndürülüyor
-            role = user.Role // ✅ Kullanıcının rolü de döndürülüyor
+            birthDate = user.BirthDate.ToString("yyyy-MM-dd"),
+            role = user.Role
         });
     }
 
-    // 📌 Kullanıcı Kayıt Ol
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] User user)
     {
@@ -48,7 +47,7 @@ public class UserController : ControllerBase
 
         var today = DateTime.Today;
         var age = today.Year - user.BirthDate.Year;
-        if (user.BirthDate.Date > today.AddYears(-age)) age--; // ✅ Yaşı doğum tarihinden hesapla
+        if (user.BirthDate.Date > today.AddYears(-age)) age--;
 
         if (age < 18)
         {
@@ -85,10 +84,10 @@ public class UserController : ControllerBase
             return Unauthorized(new { message = "E-posta veya şifre hatalı!" });
         }
 
-        // Kullanıcının gönderdiği şifreyi tekrar hash'le
+
         string hashedPassword = HashPassword(loginUser.Password);
 
-        // Hash'lenmiş şifreyi veritabanındaki ile karşılaştır
+
         if (user.Password != hashedPassword)
         {
             return Unauthorized(new { message = "E-posta veya şifre hatalı!" });
@@ -114,7 +113,7 @@ public class UserController : ControllerBase
     }
 
 
-    // 📌 Şifreyi Hashleme Metodu (Güvenlik için)
+
     private string HashPassword(string password)
     {
         using (SHA256 sha256 = SHA256.Create())

@@ -19,27 +19,25 @@ namespace BusTicketAPI.Controllers
             _context = context;
         }
 
-        // 🛒 1️⃣ Bilet Satın Alma
         [HttpPost]
         public async Task<ActionResult<Bilet>> SatınAl([FromBody] Bilet bilet)
         {
             if (bilet == null || bilet.SeferId <= 0 || bilet.UserId <= 0 || bilet.KoltukNumarasi <= 0)
                 return BadRequest("Eksik veya hatalı veri!");
 
-            // 📌 Koltuk daha önce satın alınmış mı kontrol et
+
             bool koltukDolu = await _context.Biletler
                 .AnyAsync(b => b.SeferId == bilet.SeferId && b.KoltukNumarasi == bilet.KoltukNumarasi);
 
             if (koltukDolu)
                 return BadRequest("Bu koltuk zaten satın alınmış!");
 
-            // 📌 Sefer bilgilerini al ve fiyatı bilete ekle
             var sefer = await _context.Seferler.FirstOrDefaultAsync(s => s.Id == bilet.SeferId);
             if (sefer == null)
                 return BadRequest("Geçersiz sefer!");
 
-            bilet.Fiyat = sefer.Fiyat; // 🔥 Fiyatı bilet kaydına ekle
-            bilet.SatinAlmaTarihi = DateTime.UtcNow; // 🔥 Satın alma tarihini ekle
+            bilet.Fiyat = sefer.Fiyat;
+            bilet.SatinAlmaTarihi = DateTime.UtcNow;
 
             _context.Biletler.Add(bilet);
             await _context.SaveChangesAsync();
@@ -48,8 +46,6 @@ namespace BusTicketAPI.Controllers
         }
 
 
-
-        // 🎫 2️⃣ Kullanıcının Biletlerini Getir
         [HttpGet("{userId}")]
         public async Task<ActionResult<IEnumerable<object>>> GetBiletler(int userId)
         {

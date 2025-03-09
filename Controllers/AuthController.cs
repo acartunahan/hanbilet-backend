@@ -19,7 +19,7 @@ namespace BusTicketAPI.Controllers
             _context = context;
         }
 
-        // 📌 Kullanıcı Kayıt (Register)
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] User user)
         {
@@ -29,7 +29,6 @@ namespace BusTicketAPI.Controllers
                 return BadRequest(new { message = "Bu e-posta adresi zaten kullanılıyor." });
             }
 
-            // Şifreyi hash'le
             user.Password = HashPassword(user.Password);
             user.ConfirmPassword = user.Password;
 
@@ -38,13 +37,13 @@ namespace BusTicketAPI.Controllers
             return Ok(new { message = "Kullanıcı başarıyla kaydedildi." });
         }
 
-        // 📌 Kullanıcı Giriş (Login)
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // Validasyon hatalarını döndür
+                return BadRequest(ModelState);
             }
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginRequest.Email);
@@ -54,7 +53,7 @@ namespace BusTicketAPI.Controllers
                 return Unauthorized(new { message = "E-posta veya şifre hatalı!" });
             }
 
-            // Kullanıcının gönderdiği şifreyi tekrar hash'le ve karşılaştır
+
             string hashedPassword = HashPassword(loginRequest.Password);
 
             if (user.Password != hashedPassword)
@@ -62,18 +61,17 @@ namespace BusTicketAPI.Controllers
                 return Unauthorized(new { message = "E-posta veya şifre hatalı!" });
             }
 
-            // ✅ Kullanıcının `cinsiyet` bilgisini ekledik
+
             return Ok(new
             {
                 message = "Giriş başarılı!",
                 userId = user.Id,
                 name = user.Name,
                 role = user.Role,
-                cinsiyet = user.Cinsiyet // ✅ Cinsiyet bilgisi artık API yanıtında!
+                cinsiyet = user.Cinsiyet
             });
         }
 
-        // 📌 Şifreyi Hashleme Metodu (Güvenlik için)
         private string HashPassword(string password)
         {
             using (SHA256 sha256 = SHA256.Create())

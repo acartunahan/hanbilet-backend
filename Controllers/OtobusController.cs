@@ -36,7 +36,6 @@ namespace BusTicketAPI.Controllers
         }
 
 
-        // 2️⃣ Yeni otobüs ekle
         [HttpPost]
         public async Task<ActionResult<Otobus>> PostOtobus(Otobus otobus)
         {
@@ -65,7 +64,6 @@ namespace BusTicketAPI.Controllers
             return Ok(otobusler);
         }
 
-        // 3️⃣ Belirli bir otobüsü getir
         [HttpGet("{id}")]
         public async Task<ActionResult<Otobus>> GetOtobus(int id)
         {
@@ -75,7 +73,6 @@ namespace BusTicketAPI.Controllers
             return otobus;
         }
 
-        // 4️⃣ Otobüsü güncelle
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOtobus(int id, Otobus otobus)
         {
@@ -87,7 +84,6 @@ namespace BusTicketAPI.Controllers
             return NoContent();
         }
 
-        // 5️⃣ Otobüsü sil
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOtobus(int id)
         {

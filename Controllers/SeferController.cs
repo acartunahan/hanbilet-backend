@@ -24,7 +24,7 @@ namespace YourNamespace.Controllers
         {
             var query = _context.Seferler.AsQueryable();
 
-            // Filtreleme işlemleri
+
             if (kalkisSehirId.HasValue)
                 query = query.Where(s => s.KalkisSehirId == kalkisSehirId.Value);
 
@@ -39,25 +39,25 @@ namespace YourNamespace.Controllers
                 query = query.Where(s => s.Tarih >= startOfDay && s.Tarih < endOfDay);
             }
 
-            // İlişkili tablolardan verileri dahil et
+
             var seferler = await query
-                .Include(s => s.KalkisSehir)  // Kalkış şehri
-                .Include(s => s.VarisSehir)   // Varış şehri
-                .Include(s => s.Firma)        // Firma
-                .Include(s => s.Otobus)       // Otobüs
+                .Include(s => s.KalkisSehir)
+                .Include(s => s.VarisSehir)
+                .Include(s => s.Firma)
+                .Include(s => s.Otobus)
                 .ToListAsync();
 
             var seferlerDto = seferler.Select(s => new
             {
                 s.Id,
-                KalkisSehirAdi = s.KalkisSehir?.SehirAdi,  // Kalkış şehri adı
-                VarisSehirAdi = s.VarisSehir?.SehirAdi,    // Varış şehri adı
+                KalkisSehirAdi = s.KalkisSehir?.SehirAdi,
+                VarisSehirAdi = s.VarisSehir?.SehirAdi,
                 s.Tarih,
                 // Saatin formatlanması
-                Saat = s.Saat.ToString(@"hh\:mm"),          // Saat formatı
+                Saat = s.Saat.ToString(@"hh\:mm"),
                 s.Fiyat,
-                FirmaAdi = s.Firma?.FirmaAdi,             // Firma adı
-                OtobusPlaka = s.Otobus?.Plaka             // Otobüs plakası
+                FirmaAdi = s.Firma?.FirmaAdi,
+                OtobusPlaka = s.Otobus?.Plaka
             }).ToList();
 
             return Ok(seferlerDto);
@@ -67,7 +67,6 @@ namespace YourNamespace.Controllers
 
 
 
-        // 2️⃣ Yeni Sefer Ekle
         [HttpPost]
         public async Task<ActionResult<Sefer>> PostSefer([FromBody] Sefer sefer)
         {
@@ -89,7 +88,6 @@ namespace YourNamespace.Controllers
             return CreatedAtAction(nameof(GetSeferler), new { id = sefer.Id }, sefer);
         }
 
-        // 3️⃣ Belirli Bir Seferi Getir
         [HttpGet("{id}")]
         public async Task<ActionResult<object>> GetSefer(int id)
         {
@@ -106,17 +104,16 @@ namespace YourNamespace.Controllers
             return Ok(new
             {
                 sefer.Id,
-                KalkisSehir = sefer.KalkisSehir.SehirAdi,   // Kalkış şehri
-                VarisSehir = sefer.VarisSehir.SehirAdi,     // Varış şehri
-                Tarih = sefer.Tarih.ToString("yyyy-MM-dd"), // Tarih formatı
-                Saat = sefer.Saat.ToString(@"hh\:mm"),      // Saat formatı
+                KalkisSehir = sefer.KalkisSehir.SehirAdi,
+                VarisSehir = sefer.VarisSehir.SehirAdi,
+                Tarih = sefer.Tarih.ToString("yyyy-MM-dd"),
+                Saat = sefer.Saat.ToString(@"hh\:mm"),
                 sefer.Fiyat,
-                FirmaAdi = sefer.Firma.FirmaAdi,            // Firma adı
-                OtobusPlaka = sefer.Otobus.Plaka            // Otobüs plakası
+                FirmaAdi = sefer.Firma.FirmaAdi,
+                OtobusPlaka = sefer.Otobus.Plaka
             });
         }
 
-        // 4️⃣ Sefer Güncelle
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSefer(int id, Sefer sefer)
         {
@@ -140,7 +137,6 @@ namespace YourNamespace.Controllers
             return NoContent();
         }
 
-        // 5️⃣ Sefer Sil
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSefer(int id)
         {

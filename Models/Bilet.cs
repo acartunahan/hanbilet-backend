@@ -8,25 +8,25 @@ namespace YourNamespace.Models
     public class Bilet
     {
         [Key]
-        public int Id { get; set; } // 📌 Bilet ID (Primary Key)
+        public int Id { get; set; }
 
         [Required]
         [ForeignKey("User")]
-        public int UserId { get; set; } // 📌 Bileti alan kullanıcı
+        public int UserId { get; set; }
         public User? User { get; set; }
 
         [Required]
         [ForeignKey("Sefer")]
-        public int SeferId { get; set; } // 📌 Hangi sefere ait?
+        public int SeferId { get; set; }
         public Sefer? Sefer { get; set; }
 
         [Required]
-        public int KoltukNumarasi { get; set; } // 📌 Hangi koltuk numarası?
+        public int KoltukNumarasi { get; set; }
 
         [Required]
-        public decimal Fiyat { get; set; } // 📌 Seferin fiyatı eklenmeli!
+        public decimal Fiyat { get; set; }
 
         [Required]
-        public DateTime SatinAlmaTarihi { get; set; } = DateTime.UtcNow; // 📌 Satın alma zamanı
+        public DateTime SatinAlmaTarihi { get; set; } = DateTime.UtcNow;
     }
 }

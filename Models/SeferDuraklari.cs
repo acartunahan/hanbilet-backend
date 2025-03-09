@@ -11,15 +11,15 @@ namespace YourNamespace.Models
         [Required]
         [ForeignKey("Sefer")]
         public int SeferId { get; set; }
-        public required Sefer Sefer { get; set; }  // İlişkilendirme
+        public required Sefer Sefer { get; set; }
 
         [Required]
-        public required string Durak { get; set; }  // Durak ismi (Ankara, Eskişehir, vs.)
+        public required string Durak { get; set; }
 
         [Required]
-        public int Sira { get; set; }  // Otobüsün duraktaki sırası
+        public int Sira { get; set; }
 
         [Required]
-        public decimal Fiyat { get; set; } // Bu durağa kadar olan fiyat
+        public decimal Fiyat { get; set; }
     }
 }

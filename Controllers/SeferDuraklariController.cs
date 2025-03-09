@@ -19,7 +19,7 @@ namespace BusTicketAPI.Controllers
             _context = context;
         }
 
-        // 1️⃣ Belirli bir seferin tüm duraklarını getir
+
         [HttpGet("{seferId}")]
         public async Task<ActionResult<IEnumerable<SeferDuraklari>>> GetDuraklar(int seferId)
         {
@@ -34,7 +34,7 @@ namespace BusTicketAPI.Controllers
             return duraklar;
         }
 
-        // 2️⃣ Yeni bir durak ekle
+
         [HttpPost]
         public async Task<ActionResult<SeferDuraklari>> PostDurak(SeferDuraklari durak)
         {
@@ -43,7 +43,6 @@ namespace BusTicketAPI.Controllers
             return CreatedAtAction(nameof(GetDuraklar), new { seferId = durak.SeferId }, durak);
         }
 
-        // 3️⃣ Belirli bir durağı getir
         [HttpGet("durak/{id}")]
         public async Task<ActionResult<SeferDuraklari>> GetDurak(int id)
         {
@@ -53,7 +52,7 @@ namespace BusTicketAPI.Controllers
             return durak;
         }
 
-        // 4️⃣ Durağı Güncelle
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDurak(int id, SeferDuraklari durak)
         {
@@ -77,7 +76,7 @@ namespace BusTicketAPI.Controllers
             return NoContent();
         }
 
-        // 5️⃣ Durağı Sil
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDurak(int id)
         {
